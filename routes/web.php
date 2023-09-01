@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -69,15 +70,21 @@ $tasks = [
 
 
 Route::get('/', function() use($tasks){
-  return view('index', ['tasks'=> $tasks]);
+  return view('index', ['tasks'=> \App\Models\task::latest()->get()]);
 })->name('tasks.index');
 
-Route::get('/{id}', function($id) use($tasks){
-  $task = collect($tasks)->firstWhere('id', $id);
+Route::view('/tasks/create','create')->name('tasks.create');
 
-  if(!$task){
-    abort(Response::HTTP_NOT_FOUND);
-  }
-  return view('show',['task'=>$task]); 
+Route::get('/{id}', function($id) use($tasks){
+     
+  return view('show',['task'=>\App\Models\task::find($id)]); 
 
 })->name('tasks.show');
+
+
+
+Route::post('/tasks', function(request $request){
+  $data = $request->validate(
+    'title' = 
+  )
+})->name('tasks.store');
